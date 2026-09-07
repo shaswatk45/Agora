@@ -157,6 +157,9 @@ class Agent:
 
     # -- serialisation for the UI -----------------------------------------
     def snapshot(self, world) -> Dict:
+        target = self.current_target
+        target_pos = list(world.anchor_of(target)) if target in world.map.locations else None
+        moving = tuple(self.pos) != tuple(target_pos) if target_pos else False
         return {
             "id": self.id,
             "name": self.persona.first_name,
@@ -166,6 +169,9 @@ class Agent:
             "action": self.current_action,
             "location": world.location_at(self.pos),
             "occupation": self.persona.occupation,
+            "target": target,            # location name the agent is heading to
+            "target_pos": target_pos,    # [x, y] anchor tile of that location
+            "moving": moving,            # True while still en route to the target
         }
 
     def inspect(self, world) -> Dict:
