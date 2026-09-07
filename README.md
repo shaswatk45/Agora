@@ -90,12 +90,25 @@ agent's id, with its signature colour as the shirt).
 
 Click **Enter 3D** (or open `/3d`) for a first/third-person **walkable town**
 rendered with three.js — same simulation, same live data, in 3D. Everything is
-procedural (no external assets): low-poly buildings with roofs and glowing
-windows, trees, a plaza fountain and a park pond, a day/night cycle with moving
-sun and lamplight, and the 15 villagers walking their routines. **WASD** to move,
-**mouse** to look, **Shift** to run, **V** to switch first/third person, and walk
-up to anyone and press **E** to read their mind. Seed the party and watch the
-café bloom as the crowd gathers around you.
+procedural (no external assets, no bundler): painted-to-canvas textures (grass,
+cobblestone, shingles, plaster, wood), gabled buildings with framed windows,
+signs and per-place details (café umbrellas, library columns, school bell tower,
+market stall, picket fences), instanced trees/grass/flowers, a plaza fountain
+and park pond, and 15 villagers with hair, hats and props who walk their
+routines — and glance at you when you're close.
+
+- **Cinematic lighting** — a shader sky dome with sun glow and drifting clouds,
+  ACES tone-mapping and soft bloom, a full day/night cycle with stars, glowing
+  windows, porch lights and real lamplight, dust motes by day and fireflies at night.
+- **Game feel** — velocity-based movement with head-bob and run FOV, smooth
+  third-person follow, a **minimap**, an **"E · Talk to …"** prompt, location
+  toasts as you enter places, and an adaptive High/Low quality toggle.
+- **The party** — string lights, bunting, lanterns, hearts and confetti as the
+  crowd converges on the glowing café at dusk; villagers who know about it wear
+  a gold ring.
+
+**WASD** move · **mouse** look · **Shift** run · **V** first/third person ·
+**E** read a villager's mind · **Space** play/pause · optional ambient sound (🔊).
 
 ### Use a real model (swappable behind one interface)
 

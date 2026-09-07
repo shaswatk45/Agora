@@ -7,54 +7,65 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
   <style>
-    :root{ --glass:rgba(18,16,26,.72); --line:rgba(255,255,255,.1); --text:#f4ecdf; --muted:#b9ad9c; --gold:#ffd36b; --rose:#ff6f91; --mint:#8fe3c0; --sky:#7aa2ff; --lav:#b7a6ff; --ui:"Nunito",system-ui,sans-serif; --display:"Fraunces",Georgia,serif; }
+    :root{ --glass:rgba(16,14,24,.66); --line:rgba(255,255,255,.1); --text:#f6efe3; --muted:#b9ad9c; --gold:#ffd36b; --rose:#ff6f91; --mint:#8fe3c0; --sky:#7aa2ff; --lav:#b7a6ff; --ui:"Nunito",system-ui,sans-serif; --display:"Fraunces",Georgia,serif; }
     *{box-sizing:border-box} [hidden]{display:none!important}
     html,body{margin:0;height:100%;background:#0a0e16;color:var(--text);font-family:var(--ui);overflow:hidden}
-    #app{position:fixed;inset:0}
-    canvas{display:block}
-    .glass{background:var(--glass);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+    #app{position:fixed;inset:0} canvas{display:block}
+    .glass{background:var(--glass);backdrop-filter:blur(14px) saturate(1.25);-webkit-backdrop-filter:blur(14px) saturate(1.25);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05)}
     /* loading */
-    #load{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle at 50% 40%,#1a2338,#0a0e16);z-index:60}
-    #load .ring{width:46px;height:46px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
-    #load .t{font-family:var(--display);font-size:20px;letter-spacing:2px}
+    #load{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse at 50% 35%,#1b2542 0%,#0a0e16 70%);z-index:60;transition:opacity .6s}
+    #load.out{opacity:0;pointer-events:none}
+    #load .t{font-family:var(--display);font-size:34px;letter-spacing:6px;font-weight:900}
     #load .s{font-size:13px;color:var(--muted)}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    /* top bar */
-    #top{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:8px;align-items:center;padding:8px}
-    .btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);font-weight:800;font-size:13px;cursor:pointer;font-family:var(--ui)}
-    .btn:hover{background:rgba(255,255,255,.12)}
+    #load .bar{width:260px;height:6px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+    #load .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .3s}
+    /* top */
+    #top{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:6px;align-items:center;padding:7px}
+    .btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);font-weight:800;font-size:13px;cursor:pointer;font-family:var(--ui);white-space:nowrap}
+    .btn:hover{background:rgba(255,255,255,.12)} .btn:active{transform:translateY(1px)}
     .btn.primary{background:linear-gradient(135deg,#8fe3c0,#54b98a);color:#08281a;border-color:transparent}
     .btn.accent{background:linear-gradient(135deg,#ff9f7f,#ff6f91);color:#2a0c14;border-color:transparent}
     .btn.on{background:rgba(255,211,107,.2);border-color:rgba(255,211,107,.5);color:var(--gold)}
     .speed{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;padding:0 8px}
-    .speed input{width:84px;accent-color:var(--gold)}
-    /* clock top-left */
+    .speed input{width:80px;accent-color:var(--gold)}
     #clock{position:fixed;top:14px;left:14px;z-index:20;display:flex;gap:12px;align-items:center;padding:10px 14px}
     #clock .time{font-family:var(--display);font-weight:900;font-size:24px;font-variant-numeric:tabular-nums;line-height:1}
     #clock .day{font-size:11.5px;color:var(--muted);margin-top:3px}
     #clock .brand{font-family:var(--display);font-weight:900;letter-spacing:3px;font-size:14px;border-right:1px solid var(--line);padding-right:12px}
-    /* metrics top-right */
-    #metrics{position:fixed;top:14px;right:14px;z-index:20;display:flex;gap:8px;align-items:stretch;padding:8px}
-    .metric{padding:6px 12px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid var(--line);min-width:74px}
+    #metrics{position:fixed;top:14px;right:14px;z-index:20;display:flex;gap:8px;align-items:stretch}
+    .metric{padding:6px 12px;border-radius:12px;min-width:76px}
     .metric .k{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:800}
     .metric .v{font-family:var(--display);font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
     .metric .bar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);margin-top:5px;overflow:hidden}
     .metric .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .4s}
-    /* crosshair + hint */
-    #cross{position:fixed;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;border:2px solid rgba(255,255,255,.7);z-index:15;pointer-events:none;opacity:0;transition:opacity .2s}
-    #cross.on{opacity:.9}
+    .back{position:fixed;left:14px;top:66px;z-index:20;text-decoration:none}
+    /* crosshair, prompt, toast, hint */
+    #cross{position:fixed;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 0 2px rgba(0,0,0,.35);z-index:15;pointer-events:none;opacity:0;transition:opacity .2s,transform .15s,background .15s}
+    #cross.on{opacity:1} #cross.hot{background:var(--gold);transform:scale(1.6)}
+    #prompt{position:fixed;left:50%;top:56%;transform:translateX(-50%);z-index:16;display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;opacity:0;transition:opacity .15s,transform .15s;pointer-events:none}
+    #prompt.on{opacity:1;transform:translateX(-50%) translateY(-4px)}
+    #prompt .key{width:30px;height:30px;border-radius:8px;background:var(--gold);color:#2a1808;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;box-shadow:0 2px 0 #b8902f}
+    #prompt .who{font-weight:800;font-size:13.5px} #prompt .role{font-size:11px;color:var(--muted)}
+    #toast{position:fixed;left:50%;top:70px;transform:translateX(-50%) translateY(-8px);z-index:16;padding:8px 18px;text-align:center;opacity:0;transition:opacity .35s,transform .35s;pointer-events:none}
+    #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+    #toast .n{font-family:var(--display);font-size:18px;font-weight:700} #toast .k{font-size:10.5px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase}
     #hint{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(0,0,0,.5);padding:9px 16px;border-radius:22px;font-size:12.5px;color:#fff;text-align:center;transition:opacity .5s}
-    #hint b{color:var(--gold)}
-    #hint.gone{opacity:0;pointer-events:none}
-    /* prompt to enter */
-    #enter{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(6,9,16,.45);cursor:pointer}
-    #enter .card{padding:22px 28px;text-align:center;max-width:360px}
-    #enter .t{font-family:var(--display);font-size:22px;margin-bottom:6px}
+    #hint b{color:var(--gold)} #hint.gone{opacity:0;pointer-events:none}
+    /* minimap */
+    #mini{position:fixed;right:14px;bottom:14px;z-index:20;padding:6px;transition:right .3s}
+    body.insp-open #mini{right:408px}
+    #mini canvas{display:block;border-radius:11px}
+    /* enter */
+    #enter{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(6,9,16,.35);cursor:pointer}
+    #enter .card{padding:24px 30px;text-align:center;max-width:380px}
+    #enter .t{font-family:var(--display);font-size:24px;margin-bottom:6px}
     #enter .s{font-size:13px;color:var(--muted);line-height:1.6}
     #enter .keys{display:flex;gap:6px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
     #enter .key{border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;font-weight:800;background:rgba(255,255,255,.05)}
+    #enter .go{margin-top:10px;color:var(--gold);font-weight:800;animation:pulse 1.6s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
     /* gazette */
-    #gaz{position:fixed;bottom:14px;left:14px;z-index:20;width:320px;max-height:26vh;display:flex;flex-direction:column;overflow:hidden}
+    #gaz{position:fixed;bottom:14px;left:14px;z-index:20;width:300px;max-height:24vh;display:flex;flex-direction:column;overflow:hidden}
     #gaz .h{padding:9px 13px;border-bottom:1px solid var(--line);font-family:var(--display);font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
     #gaz .h button{background:none;border:1px solid var(--line);color:var(--muted);width:22px;height:22px;border-radius:6px;cursor:pointer}
     #gaz .list{overflow-y:auto;padding:6px 10px;font-size:12px;line-height:1.4;scrollbar-width:thin}
@@ -63,32 +74,23 @@
     .gi .t{color:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:2px}
     .gi .d{width:7px;height:7px;border-radius:50%;margin-top:4px;background:var(--mint)}
     .gi.kind-reflection .d{background:var(--lav)} .gi.kind-party_seed .d{background:var(--gold)}
-    .gi.hl .d{background:var(--rose);box-shadow:0 0 7px var(--rose)} .gi.hl .x{color:#ffd0dc}
-    .gi.hl .x::before{content:"✦ ";color:var(--gold)}
+    .gi.hl .d{background:var(--rose);box-shadow:0 0 7px var(--rose)} .gi.hl .x{color:#ffd0dc} .gi.hl .x::before{content:"✦ ";color:var(--gold)}
     /* inspector */
     #insp{position:fixed;top:64px;right:14px;bottom:14px;width:380px;z-index:30;padding:16px;overflow-y:auto;transform:translateX(calc(100% + 24px));transition:transform .3s cubic-bezier(.2,.8,.2,1);scrollbar-width:thin}
     #insp.open{transform:translateX(0)}
     #insp .close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);cursor:pointer}
     .ihead{display:flex;gap:12px;align-items:center;margin-bottom:8px}
     .iav{width:66px;height:66px;border-radius:18px;flex:none;box-shadow:0 6px 18px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;font-size:24px;color:#fff}
-    .iname{font-family:var(--display);font-weight:900;font-size:20px;line-height:1.05}
-    .irole{color:var(--muted);font-size:12px;margin-top:3px}
-    .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-    .chip{font-size:10.5px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
-    .chip.loc{color:var(--gold);border-color:rgba(255,211,107,.35)}
-    .sec{margin-top:15px} .sec h4{margin:0 0 7px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;display:flex;gap:8px;align-items:center}
-    .sec h4::after{content:"";flex:1;height:1px;background:var(--line)}
+    .iname{font-family:var(--display);font-weight:900;font-size:20px;line-height:1.05} .irole{color:var(--muted);font-size:12px;margin-top:3px}
+    .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px} .chip{font-size:10.5px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid var(--line)} .chip.loc{color:var(--gold);border-color:rgba(255,211,107,.35)}
+    .sec{margin-top:15px} .sec h4{margin:0 0 7px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;display:flex;gap:8px;align-items:center} .sec h4::after{content:"";flex:1;height:1px;background:var(--line)}
     .thought{padding:11px 13px;border-radius:13px;background:linear-gradient(135deg,rgba(255,140,105,.16),rgba(255,211,107,.08));border:1px solid rgba(255,140,105,.3);font-size:13.5px;font-weight:600;line-height:1.4}
     .going{margin-top:7px;font-size:12px;color:var(--muted)} .going b{color:var(--gold)}
     .plan{position:relative;padding-left:16px} .plan::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.1)}
-    .pstep{position:relative;display:grid;grid-template-columns:44px 1fr;gap:7px;padding:3px 0;font-size:12px;color:var(--muted)}
-    .pstep::before{content:"";position:absolute;left:-14px;top:8px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22)}
-    .pstep .pt{color:var(--sky);font-weight:700;font-variant-numeric:tabular-nums}
-    .pstep.done{opacity:.5} .pstep.now{color:var(--text);font-weight:700} .pstep.now::before{background:var(--mint);box-shadow:0 0 0 4px rgba(143,227,192,.2)}
-    .pstep.event .pt{color:var(--rose)}
+    .pstep{position:relative;display:grid;grid-template-columns:44px 1fr;gap:7px;padding:3px 0;font-size:12px;color:var(--muted)} .pstep::before{content:"";position:absolute;left:-14px;top:8px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22)}
+    .pstep .pt{color:var(--sky);font-weight:700;font-variant-numeric:tabular-nums} .pstep.done{opacity:.5} .pstep.now{color:var(--text);font-weight:700} .pstep.now::before{background:var(--mint);box-shadow:0 0 0 4px rgba(143,227,192,.2)} .pstep.event .pt{color:var(--rose)}
     .legend{display:flex;gap:11px;font-size:10px;color:var(--muted);margin-bottom:7px} .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
-    .mem{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.04);border:1px solid var(--line);margin-bottom:6px}
-    .mem .tx{font-size:12px;line-height:1.4} .mem .mt{display:flex;align-items:center;gap:7px;margin-top:6px}
+    .mem{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.04);border:1px solid var(--line);margin-bottom:6px} .mem .tx{font-size:12px;line-height:1.4} .mem .mt{display:flex;align-items:center;gap:7px;margin-top:6px}
     .badge{font-size:9.5px;padding:1px 7px;border-radius:20px;border:1px solid var(--line);color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.3px}
     .badge.kind-observation{color:var(--sky)} .badge.kind-dialogue{color:var(--mint)} .badge.kind-plan{color:var(--gold)} .badge.kind-reflection{color:var(--lav)}
     .bars{display:flex;gap:3px;flex:1;align-items:center}.bars .b{height:6px;border-radius:3px;min-width:2px}.bars .rec{background:var(--sky)}.bars .imp{background:#ff8c69}.bars .rel{background:var(--mint)}
@@ -96,19 +98,21 @@
     .refl{padding:8px 10px;border-left:3px solid var(--lav);background:rgba(183,166,255,.08);border-radius:0 10px 10px 0;font-size:12px;margin-bottom:6px;font-style:italic}
     .story{font-size:12px;color:var(--muted);line-height:1.55}
     .rel{display:flex;align-items:center;gap:8px;font-size:12px;padding:2px 0}.rel .sw{width:10px;height:10px;border-radius:50%}.rel b{color:var(--text)}
-    /* 3d name labels */
-    .label{font-family:var(--ui);font-weight:800;font-size:12px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);padding:2px 8px;border-radius:9px;background:rgba(20,16,26,.55);border:1px solid rgba(255,255,255,.15);white-space:nowrap;pointer-events:none;transform:translateY(-6px)}
-    .label.knower{border-color:var(--gold);box-shadow:0 0 10px rgba(255,211,107,.5)}
-    .label.sel{background:rgba(255,211,107,.9);color:#2a1808}
-    .plabel{font-family:var(--display);font-weight:700;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.8);font-size:13px;pointer-events:none;opacity:.9}
-    .back{position:fixed;left:14px;bottom:auto;top:64px;z-index:20}
-    @media(max-width:900px){#gaz{display:none} .metric:nth-child(n+3){display:none} #insp{width:92vw}}
+    /* labels in world */
+    .label{font-family:var(--ui);font-weight:800;font-size:12px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);padding:2px 9px;border-radius:9px;background:rgba(20,16,26,.5);border:1px solid rgba(255,255,255,.14);white-space:nowrap;pointer-events:none;transform:translateY(-4px);transition:opacity .2s}
+    .label small{display:block;font-weight:600;font-size:10px;color:var(--muted)}
+    .label.knower{border-color:var(--gold);box-shadow:0 0 10px rgba(255,211,107,.45)}
+    .label.sel{background:rgba(255,211,107,.92);color:#2a1808;border-color:#fff} .label.sel small{color:#5a3a10}
+    .label.far{opacity:0}
+    .label small{display:none} .label.sel small,.label.near small{display:block}
+    @media(max-width:1180px){#top{top:64px} .back{top:114px} #metrics .metric:nth-child(3){display:none}}
+    @media(max-width:900px){#gaz,#mini{display:none} .metric:nth-child(n+3){display:none} #insp{width:92vw} .speed{display:none}}
   </style>
 </head>
 <body>
   <div id="app"></div>
 
-  <div id="load"><div class="ring"></div><div class="t">AGORA</div><div class="s">building the town…</div></div>
+  <div id="load"><div class="t">AGORA</div><div class="bar"><i id="load-bar"></i></div><div class="s" id="load-s">waking the town…</div></div>
 
   <div id="clock" class="glass">
     <span class="brand">AGORA</span>
@@ -118,14 +122,15 @@
 
   <div id="top" class="glass">
     <button class="btn primary" id="b-play">▶ Play</button>
-    <button class="btn" id="b-step">⏭ Step</button>
-    <label class="speed">Speed <input id="speed" type="range" min="1" max="20" value="4"><span id="speed-v">4×</span></label>
+    <button class="btn" id="b-step" title="Advance one tick">⏭</button>
+    <label class="speed">⚡<input id="speed" type="range" min="1" max="20" value="4"><span id="speed-v">4×</span></label>
     <button class="btn accent" id="b-seed">✦ Seed party</button>
-    <button class="btn" id="b-view" title="Toggle first / third person (V)">👁 1st</button>
-    <button class="btn" id="b-reset">↺ Reset</button>
+    <button class="btn" id="b-view" title="First / third person (V)">👁 1st</button>
+    <button class="btn" id="b-quality" title="Graphics quality">✦ High</button>
+    <button class="btn" id="b-sound" title="Ambient sound">🔇</button>
+    <button class="btn" id="b-reset" title="Start a new day">↺</button>
   </div>
-
-  <a class="btn glass back" href="/" title="Back to the 2D map">← 2D map</a>
+  <a class="btn glass back" href="/">← 2D map</a>
 
   <div id="metrics">
     <div class="metric glass"><div class="k">Heard</div><div class="v"><span id="m-know">0</span>/<span id="m-agents">15</span></div><div class="bar"><i id="m-know-bar"></i></div></div>
@@ -134,17 +139,18 @@
   </div>
 
   <div id="cross"></div>
+  <div id="prompt" class="glass"><span class="key">E</span><div><div class="who" id="p-who">Talk to Maria</div><div class="role" id="p-role">student & barista</div></div></div>
+  <div id="toast" class="glass"><div class="k" id="t-k">cafe</div><div class="n" id="t-n">Hobbs Cafe</div></div>
 
-  <div id="gaz" class="glass">
-    <div class="h"><span>The Agora Gazette</span><button id="gaz-t">−</button></div>
-    <div class="list" id="gaz-list"></div>
-  </div>
+  <div id="mini" class="glass"><canvas id="minimap" width="200" height="150"></canvas></div>
+
+  <div id="gaz" class="glass"><div class="h"><span>The Agora Gazette</span><button id="gaz-t">−</button></div><div class="list" id="gaz-list"></div></div>
 
   <aside id="insp" class="glass"><button class="close" id="insp-x">✕</button><div id="insp-body"></div></aside>
 
-  <div id="hint">Walk up to a villager and press <b>E</b> to read their mind · <b>WASD</b> move · <b>mouse</b> look · <b>Shift</b> run · <b>V</b> view · <b>Esc</b> free cursor</div>
+  <div id="hint">Walk up to a villager and press <b>E</b> · <b>WASD</b> move · <b>mouse</b> look · <b>Shift</b> run · <b>V</b> view · <b>Esc</b> free cursor</div>
 
-  <div id="enter"><div class="card glass"><div class="t">Welcome to Agora</div><div class="s">A town of 15 AI villagers. Walk around, then <b>Seed the party</b> and watch the news spread until everyone gathers at the café.</div><div class="keys"><span class="key">WASD</span><span class="key">Mouse look</span><span class="key">Shift run</span><span class="key">E inspect</span><span class="key">V view</span></div><div class="s" style="margin-top:8px;color:var(--gold)">Click to enter</div></div></div>
+  <div id="enter"><div class="card glass"><div class="t">Welcome to Agora</div><div class="s">A little town of 15 AI villagers living their day. Walk around, then <b>seed the party</b> and watch the news spread until everyone gathers at the café at dusk.</div><div class="keys"><span class="key">WASD</span><span class="key">Mouse look</span><span class="key">Shift run</span><span class="key">E talk</span><span class="key">V view</span></div><div class="go">Click to enter</div></div></div>
 
   <script type="importmap">
   { "imports": {
