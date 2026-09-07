@@ -3,71 +3,112 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agora — a society of generative agents</title>
+  <title>Agora — a living town of generative agents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/ui/style.css" />
 </head>
 <body>
-  <header id="topbar">
+  <!-- the world -->
+  <canvas id="world"></canvas>
+
+  <div id="topbar">
+  <!-- top-left: brand + clock -->
+  <div class="hud hud-tl">
     <div class="brand">
-      <span class="logo">◍</span>
+      <div class="brand-mark" aria-hidden="true"><span></span></div>
       <div>
-        <div class="title">AGORA</div>
-        <div class="subtitle">a society of generative agents</div>
+        <div class="brand-title">AGORA</div>
+        <div class="brand-sub">a living town of generative agents</div>
       </div>
     </div>
-
     <div class="clock">
-      <div id="clock-day">Day 0</div>
-      <div id="clock-time">08:00</div>
+      <canvas id="sky" width="84" height="84" aria-hidden="true"></canvas>
+      <div class="clock-text">
+        <div class="clock-time" id="clock-time">08:00</div>
+        <div class="clock-day"><span id="clock-day">Day 0</span> · <span id="clock-period">Morning</span></div>
+      </div>
     </div>
-
-    <div class="controls">
-      <button id="btn-play" class="primary">▶ Play</button>
-      <button id="btn-step">⏭ Step</button>
-      <label class="speed">Speed
-        <input id="speed" type="range" min="1" max="20" value="3" />
-        <span id="speed-val">3×</span>
-      </label>
-      <button id="btn-seed" class="accent">✦ Seed party</button>
-      <button id="btn-reset">↺ Reset</button>
-    </div>
-  </header>
-
-  <div id="metrics">
-    <div class="chip"><span class="k">Agents</span><span class="v" id="m-agents">15</span></div>
-    <div class="chip"><span class="k">Heard about party</span><span class="v" id="m-knowers">0 / 15</span></div>
-    <div class="chip"><span class="k">At the party</span><span class="v" id="m-attend">0</span></div>
-    <div class="chip"><span class="k">LLM calls / sim-day</span><span class="v" id="m-calls">—</span></div>
-    <div class="chip"><span class="k">Cache hit rate</span><span class="v" id="m-cache">—</span></div>
-    <div class="chip"><span class="k">Embedder</span><span class="v" id="m-embed">—</span></div>
-    <button id="btn-eval" class="eval">Run believability eval</button>
   </div>
 
-  <main>
-    <section id="stage">
-      <canvas id="town" width="800" height="600"></canvas>
-      <div id="scrubber">
-        <button id="btn-live" class="live-on">● LIVE</button>
-        <input id="timeline" type="range" min="0" max="0" value="0" />
-        <span id="timeline-label">—</span>
-      </div>
-      <div id="feed">
-        <div class="feed-title">Event feed</div>
-        <div id="feed-list"></div>
-      </div>
-    </section>
+  <!-- top-center: controls -->
+  <div class="hud hud-tc">
+    <button id="btn-play" class="ctl primary" title="Play / Pause (Space)">
+      <svg class="ic ic-play" viewBox="0 0 24 24"><path d="M7 5v14l12-7z"/></svg>
+      <svg class="ic ic-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+      <span id="btn-play-label">Play</span>
+    </button>
+    <button id="btn-step" class="ctl" title="Advance one tick">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M6 5v14l8-7zM16 5h3v14h-3z"/></svg><span class="lbl">Step</span>
+    </button>
+    <label class="ctl speed" title="Ticks per second">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm1 5v4.6l3.3 2-1 1.6L11 13.4V8h2z"/></svg>
+      <input id="speed" type="range" min="1" max="20" value="4" />
+      <span id="speed-val">4×</span>
+    </label>
+    <button id="btn-seed" class="ctl accent" title="Plant the party idea in one villager">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.6 12c-2.1 4.4-9.6 9-9.6 9z"/></svg><span class="lbl">Seed party</span>
+    </button>
+    <button id="btn-follow" class="ctl" title="Camera follows the selected villager (F)">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0-6 2 3h-4l2-3zm0 20-2-3h4l-2 3zM2 12l3-2v4l-3-2zm20 0-3 2v-4l3 2z"/></svg><span class="lbl">Follow</span>
+    </button>
+    <button id="btn-reset" class="ctl" title="Start a new day from scratch">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg><span class="lbl">Reset</span>
+    </button>
+  </div>
 
-    <aside id="inspector">
-      <div class="empty" id="inspector-empty">
-        <p>Click an agent to inspect its mind.</p>
-        <p class="hint">You'll see its current thought, today's plan, and the
-          exact memories it retrieved — scored by recency, importance and
-          relevance — that explain what it's doing.</p>
-      </div>
-      <div id="inspector-body" hidden></div>
-    </aside>
-  </main>
+  <!-- top-right: metrics -->
+  <div class="hud hud-tr">
+    <div class="metric big">
+      <div class="metric-k">Heard about the party</div>
+      <div class="metric-v"><span id="m-knowers">0</span><span class="metric-of">/ <span id="m-agents">15</span></span></div>
+      <div class="bar"><div class="bar-fill" id="m-knowers-bar"></div></div>
+    </div>
+    <div class="metric">
+      <div class="metric-k">At the party</div>
+      <div class="metric-v" id="m-attend">0</div>
+    </div>
+    <div class="metric">
+      <div class="metric-k">LLM calls / day</div>
+      <div class="metric-v" id="m-calls">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-k">Cache hits</div>
+      <div class="metric-v" id="m-cache">—</div>
+    </div>
+    <button id="btn-eval" class="ctl eval" title="Interview every villager and score consistency">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3V4zm3 4v2h10V8H7zm0 3v2h7v-2H7z"/></svg><span class="lbl">Believability eval</span>
+    </button>
+  </div>
+  </div><!-- /topbar -->
 
+  <!-- bottom-left: gazette -->
+  <div class="hud hud-bl" id="gazette">
+    <div class="gz-head">
+      <span class="gz-title">The Agora Gazette</span>
+      <button class="gz-toggle" id="gz-toggle" title="Collapse">−</button>
+    </div>
+    <div class="gz-list" id="feed-list"></div>
+  </div>
+
+  <!-- bottom-center: timeline -->
+  <div class="hud hud-bc">
+    <button id="btn-live" class="live on">● LIVE</button>
+    <input id="timeline" type="range" min="0" max="0" value="0" />
+    <span id="timeline-label">—</span>
+  </div>
+
+  <!-- hint -->
+  <div class="hint" id="hint">Click a villager to look inside their mind · drag to pan · scroll to zoom</div>
+
+  <!-- right: inspector -->
+  <aside id="inspector" class="closed">
+    <button id="insp-close" class="insp-close" title="Close">✕</button>
+    <div id="inspector-body"></div>
+  </aside>
+
+  <!-- eval modal -->
   <div id="eval-modal" hidden>
     <div class="modal-card">
       <div class="modal-head">
@@ -78,6 +119,8 @@
     </div>
   </div>
 
+  <script src="/ui/world.js"></script>
+  <script src="/ui/characters.js"></script>
   <script src="/ui/app.js"></script>
 </body>
 </html>

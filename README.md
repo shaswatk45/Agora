@@ -63,6 +63,29 @@ In the browser: press **Play**, then **✦ Seed party**, and watch the invitatio
 spread through the town. Click any agent to open its mind. Press **Run
 believability eval** to interview every agent and score them live.
 
+### The town view
+
+The frontend is a living 2.5D town rendered with plain Canvas — no build step,
+no external art. Everything is drawn procedurally: buildings with roofs, awnings
+and signs per kind; lanes, trees, a pond and a plaza fountain; and a cast of
+distinct villager avatars (hair, skin, outfit, accessories derived from each
+agent's id, with its signature colour as the shirt).
+
+- **Walking, not teleporting** — server ticks are tweened along real walkable
+  paths (client-side BFS on the same grid), with facing and a walk cycle.
+- **See where everyone is going** — each moving villager shows a dotted trail
+  and a bouncing destination pin; select one and its target building pulses.
+- **Day → night** — the sim clock drives sky, ambient light, glowing windows,
+  lamplight and doorway spill.
+- **The party is an event** — a banner over the venue, string lights, floating
+  hearts and confetti as the crowd converges.
+- **Camera** — drag to pan, scroll to zoom, `F` to follow the selected villager,
+  `Space` to play/pause, `0` to refit.
+- **Inspector** — portrait, current thought, plan timeline (with the emergent
+  party step), retrieved memories with recency/importance/relevance bars,
+  reflections, relationships.
+- Live gazette feed, scrubbable timeline, and the believability eval modal.
+
 ### Use a real model (swappable behind one interface)
 
 ```bash
