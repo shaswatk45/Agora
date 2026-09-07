@@ -86,6 +86,17 @@ agent's id, with its signature colour as the shirt).
   reflections, relationships.
 - Live gazette feed, scrubbable timeline, and the believability eval modal.
 
+### Walk it in 3D
+
+Click **Enter 3D** (or open `/3d`) for a first/third-person **walkable town**
+rendered with three.js — same simulation, same live data, in 3D. Everything is
+procedural (no external assets): low-poly buildings with roofs and glowing
+windows, trees, a plaza fountain and a park pond, a day/night cycle with moving
+sun and lamplight, and the 15 villagers walking their routines. **WASD** to move,
+**mouse** to look, **Shift** to run, **V** to switch first/third person, and walk
+up to anyone and press **E** to read their mind. Seed the party and watch the
+café bloom as the crowd gathers around you.
+
 ### Use a real model (swappable behind one interface)
 
 ```bash
