@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# runtime data (LLM cache, sqlite, generated reports)
+data/*.sqlite
+data/eval_report.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

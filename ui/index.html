@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agora — a society of generative agents</title>
+  <link rel="stylesheet" href="/ui/style.css" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">◍</span>
+      <div>
+        <div class="title">AGORA</div>
+        <div class="subtitle">a society of generative agents</div>
+      </div>
+    </div>
+
+    <div class="clock">
+      <div id="clock-day">Day 0</div>
+      <div id="clock-time">08:00</div>
+    </div>
+
+    <div class="controls">
+      <button id="btn-play" class="primary">▶ Play</button>
+      <button id="btn-step">⏭ Step</button>
+      <label class="speed">Speed
+        <input id="speed" type="range" min="1" max="20" value="3" />
+        <span id="speed-val">3×</span>
+      </label>
+      <button id="btn-seed" class="accent">✦ Seed party</button>
+      <button id="btn-reset">↺ Reset</button>
+    </div>
+  </header>
+
+  <div id="metrics">
+    <div class="chip"><span class="k">Agents</span><span class="v" id="m-agents">15</span></div>
+    <div class="chip"><span class="k">Heard about party</span><span class="v" id="m-knowers">0 / 15</span></div>
+    <div class="chip"><span class="k">At the party</span><span class="v" id="m-attend">0</span></div>
+    <div class="chip"><span class="k">LLM calls / sim-day</span><span class="v" id="m-calls">—</span></div>
+    <div class="chip"><span class="k">Cache hit rate</span><span class="v" id="m-cache">—</span></div>
+    <div class="chip"><span class="k">Embedder</span><span class="v" id="m-embed">—</span></div>
+    <button id="btn-eval" class="eval">Run believability eval</button>
+  </div>
+
+  <main>
+    <section id="stage">
+      <canvas id="town" width="800" height="600"></canvas>
+      <div id="scrubber">
+        <button id="btn-live" class="live-on">● LIVE</button>
+        <input id="timeline" type="range" min="0" max="0" value="0" />
+        <span id="timeline-label">—</span>
+      </div>
+      <div id="feed">
+        <div class="feed-title">Event feed</div>
+        <div id="feed-list"></div>
+      </div>
+    </section>
+
+    <aside id="inspector">
+      <div class="empty" id="inspector-empty">
+        <p>Click an agent to inspect its mind.</p>
+        <p class="hint">You'll see its current thought, today's plan, and the
+          exact memories it retrieved — scored by recency, importance and
+          relevance — that explain what it's doing.</p>
+      </div>
+      <div id="inspector-body" hidden></div>
+    </aside>
+  </main>
+
+  <div id="eval-modal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>Believability evaluation</span>
+        <button id="eval-close">✕</button>
+      </div>
+      <div id="eval-content">Running…</div>
+    </div>
+  </div>
+
+  <script src="/ui/app.js"></script>
+</body>
+</html>

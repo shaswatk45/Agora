@@ -1,0 +1,14 @@
+# Core (required) -- the web server that runs the town + UI
+fastapi>=0.110
+uvicorn>=0.27
+websockets>=12
+
+# Optional -- real semantic embeddings for retrieval relevance.
+# Without it, Agora falls back to a dependency-free hashing embedder and still runs.
+# sentence-transformers>=2.5
+
+# Notes:
+# * The default LLM backend is a deterministic mock (no install, no API key) so
+#   the simulation and the party-emergence demo run out of the box.
+# * Ollama and OpenAI-compatible backends use only the standard library (urllib);
+#   no extra packages needed. For Ollama, install it separately and `ollama pull`.

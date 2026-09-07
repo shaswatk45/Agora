@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agora"
+version = "0.1.0"
+description = "A society of generative agents on a cognitive architecture (memory-stream retrieval, reflection, planning, emergence)."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+    "websockets>=12",
+]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers>=2.5"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
