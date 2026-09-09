@@ -1,0 +1,13 @@
+# Vercel serves only the static site (index.html, town3d.html, ui/*).
+# The Python engine is for running locally; exclude it from the static deploy.
+src/
+tests/
+eval/
+data/
+scenarios/
+*.py
+requirements.txt
+pyproject.toml
+run_tests.py
+RESUME.md
+.gitignore

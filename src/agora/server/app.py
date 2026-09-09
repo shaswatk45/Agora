@@ -74,11 +74,15 @@ def create_app(cfg: Optional[Config] = None) -> FastAPI:
     # -- static UI ---------------------------------------------------------
     @app.get("/")
     async def index():
-        return FileResponse(os.path.join(_UI_DIR, "index.html"))
+        return FileResponse(os.path.join(_ROOT, "index.html"))
+
+    @app.get("/town3d.html")
+    async def town3d_file():
+        return FileResponse(os.path.join(_ROOT, "town3d.html"))
 
     @app.get("/3d")
     async def town3d():
-        return FileResponse(os.path.join(_UI_DIR, "town3d.html"))
+        return FileResponse(os.path.join(_ROOT, "town3d.html"))
 
     if os.path.isdir(_UI_DIR):
         app.mount("/ui", StaticFiles(directory=_UI_DIR), name="ui")
