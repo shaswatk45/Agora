@@ -1,5 +1,9 @@
 # AGORA — a society of generative agents
 
+**▶ Live demo:** [the town](https://agora-six-mu.vercel.app/) · [walk it in 3D](https://agora-six-mu.vercel.app/town3d)
+&nbsp;— runs entirely in your browser (an in-browser twin of the engine). The full
+Python cognitive engine below runs locally with swappable local/LLM backends.
+
 > **Agora** *(the public square of a Greek city)* is a small simulated town where
 > 15 AI agents live out their days. Each has a persona, a **memory stream**, and
 > goals. They perceive, remember, reflect, plan, and act — and out of those

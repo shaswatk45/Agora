@@ -76,10 +76,8 @@ def create_app(cfg: Optional[Config] = None) -> FastAPI:
     async def index():
         return FileResponse(os.path.join(_ROOT, "index.html"))
 
+    @app.get("/town3d")
     @app.get("/town3d.html")
-    async def town3d_file():
-        return FileResponse(os.path.join(_ROOT, "town3d.html"))
-
     @app.get("/3d")
     async def town3d():
         return FileResponse(os.path.join(_ROOT, "town3d.html"))
